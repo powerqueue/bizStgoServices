@@ -1,0 +1,143 @@
+/*---------------------------------------*/
+/*--------   Table of contents   --------*/
+/*---------------------------------------*/
+/*
+1. External module
+	1.1 Bootstrap
+	1.2 Slick carousel
+	1.3 Magnific Popup
+	1.4 Datepicker
+	1.5 Perfect Scrollbar
+2. Fonts Icons
+3. Variables
+4. Typography
+5. Header
+6. Content layout
+7. Blog
+8. Slick
+9. Form
+10. Modal
+11. Back To Top
+12. Footer
+
+---------------------------------------*/
+
+
+/*---------------------------------------*/
+/*--------   1. External module  --------*/
+/*---------------------------------------*/
+/*-------  1.1 Bootstrap  --------*/
+@import "_variables_bootstrap.scss";
+@import "../../node_modules/bootstrap/scss/functions.scss";
+@import "../../node_modules/bootstrap/scss/variables.scss";
+@import "../../node_modules/bootstrap/scss/mixins.scss";
+@import "../../node_modules/bootstrap/scss/reboot.scss";
+@import "../../node_modules/bootstrap/scss/grid.scss";
+@import "../../node_modules/bootstrap/scss/utilities.scss";
+@import "../../node_modules/bootstrap/scss/modal.scss";
+/*-------  1.2 Slick carousel  --------*/
+@import "../../node_modules/slick-carousel/slick/slick.scss";
+/*-------  1.3 Magnific Popup  --------*/
+@import "../external/magnific-popup/magnific-popup.scss";
+/*-------  1.4 Datepicker  --------*/
+@import "../external/air-datepicker-master/dist/css/datepicker.scss";
+/*-------  1.5 Perfect Scrollbar  --------*/
+@import "../external/perfect-scrollbar/perfect-scrollbar.scss";
+
+/*----------------------------------------*/
+/*--------    2. Fonts Icons      --------*/
+/*---------------------------------------*/
+@import "../font-icons/style.scss";
+/*---------------------------------------*/
+/*----       3. Variables              --*/
+/*---------------------------------------*/
+/*
+	Theme variables
+*/
+/* font */
+$default_font:								'Roboto', sans-serif;
+$default_font2:								'Poppins', sans-serif;
+$default_font_icon:							'sanitizex';
+/* default */
+$default_bg_color:							#ffffff;
+$default_text_color:						#7b7b7b;
+$default_color:								#257ec0;
+$default_color02:							#323232;
+$default_color03:							#f1f3f5;
+
+$link_color_base:							$default_color;
+$speed:										0.2s;
+$border:									#f1f3f5;
+$radius:									4px;
+
+
+/*---------------------------------------*/
+/*--------   4. Typography       --------*/
+/*---------------------------------------*/
+@import "_typography.scss";
+/*---------------------------------------*/
+/*--------   5. Header           --------*/
+/*---------------------------------------*/
+@import "header/_header.scss";
+@import "header/subpage-title.scss";
+/*---------------------------------------*/
+/*--------   6. Content layout     ------*/
+/*---------------------------------------*/
+@import "content_layout/_slick.scss";
+@import "content_layout/_section.scss";
+@import "content_layout/_main-slider.scss";
+@import "content_layout/_added-info.scss";
+@import "content_layout/_round-layout01.scss";
+@import "content_layout/_round-layout02.scss";
+@import "content_layout/_tabs.scss";
+@import "content_layout/_video-block01.scss";
+@import "content_layout/_box-info.scss";
+@import "content_layout/section-parallax.scss";
+@import "content_layout/_box-wrapper.scss";
+@import "content_layout/_accordeon.scss";
+@import "content_layout/_img-info.scss";
+@import "content_layout/_info-list.scss";
+@import "content_layout/_img-parallax.scss";
+@import "content_layout/_blog-output.scss";
+@import "content_layout/_news-obj.scss";
+@import "content_layout/_logo-partners.scss";
+@import "content_layout/_img-double.scss";
+@import "content_layout/_certifications.scss";
+@import "content_layout/_box01.scss";
+@import "content_layout/_box02-info.scss";
+@import "content_layout/_box-layout.scss";
+@import "content_layout/_table.scss";
+@import "content_layout/_bloginfo.scss";
+@import "content_layout/_obj-video.scss";
+@import "content_layout/_map.scss";
+@import "content_layout/_box-contact.scss";
+@import "content_layout/_point-box.scss";
+/*---------------------------------------*/
+/*--------       7. Blog         ------*/
+/*--------------------------------------*/
+@import "blog/_blog.scss";
+@import "blog/_blog-single.scss";
+/*---------------------------------------*/
+/*--------       8. Slick         ------*/
+/*--------------------------------------*/
+@import "content_layout/_slick.scss";
+/*---------------------------------------*/
+/*--------       9. Form         ------*/
+/*--------------------------------------*/
+@import "form/form-default.scss";
+@import "form/custom_select.scss";
+/*---------------------------------------*/
+/*--------       10. Modal         ------*/
+/*--------------------------------------*/
+@import "modal/_modal.scss";
+/*---------------------------------------*/
+/*--------     11. Back To Top     ------*/
+/*--------------------------------------*/
+@import "back_to_top/_back_to_top.scss";
+/*---------------------------------------*/
+/*--------     12. Footer         --------*/
+/*---------------------------------------*/
+@import "footer/_footer.scss";
+
+
+@import "_demo_color_switch.scss";
