@@ -1221,7 +1221,7 @@ body.layout2 {
 
 
 .qck-sec {
-  background-image: url(../HTML/assets/images/themed/bg1.jpg);
+  background-image: url(./../images/themed/bg1.jpg);
   background-repeat: no-repeat;
   background-size: cover;
   padding: 130px 0;
@@ -1613,38 +1613,38 @@ body.layout2 {
   background-attachment: fixed;
 }
 .bg2 {
-  background-image: url(../HTML/assets/images/themed/bg2.jpg);
+  background-image: url(./../images/themed/bg2.jpg);
 }
 .bg3 {
-  background-image: url(../HTML/assets/images/themed/bg3.jpg);
+  background-image: url(./../images/themed/bg3.jpg);
   background-attachment: inherit;
 }
 .bg4 {
-  background-image: url(../HTML/assets/images/themed/bg4.jpg);
+  background-image: url(./../images/themed/bg4.jpg);
   background-attachment: inherit;
 }
 .bg5 {
-  background-image: url(../HTML/assets/images/themed/bg5.jpg);
+  background-image: url(./../images/themed/bg5.jpg);
   background-attachment: inherit;
 }
 .bg6 {
-  background-image: url(../HTML/assets/images/themed/bg6.jpg);
+  background-image: url(/../images/themed/bg6.jpg);
   background-attachment: inherit;
 }
 .bg7 {
-  background-image: url(../HTML/assets/images/themed/bg7.jpg);
+  background-image: url(./../images/themed/bg7.jpg);
   background-attachment: inherit;
 }
 .bg8 {
-  background-image: url(../HTML/assets/images/themed/bg8.jpg);
+  background-image: url(./../images/themed/bg8.jpg);
   background-attachment: inherit;
 }
 .bg9 {
-  background-image: url(../HTML/assets/images/themed/bg9.jpg);
+  background-image: url(./../images/themed/bg9.jpg);
   background-attachment: inherit;
 }
 .bg10 {
-  background-image: url(../HTML/assets/images/themed/bg10.jpg);
+  background-image: url(./../images/themed/bg10.jpg);
   background-attachment: inherit;
 }
 

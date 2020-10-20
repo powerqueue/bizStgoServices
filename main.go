@@ -40,27 +40,54 @@ var indexHTML string
 var indexTpl *template.Template
 var servicesHTML string
 var servicesTPL *template.Template
+var aboutHTML string
+var aboutTPL *template.Template
+var galleryHTML string
+var galleryTPL *template.Template
+var contactHTML string
+var contactTPL *template.Template
 
 func init() {
 
 	data, err := ioutil.ReadFile("HTML/index.html")
 	if err != nil {
-		fmt.Println("File reading error", err)
+		fmt.Println("File reading error: index", err)
 		return
 	}
 	indexHTML = string(data)
 	indexTpl = template.Must(template.New("index").Parse(indexHTML))
-}
 
-func init() {
-
-	data, err := ioutil.ReadFile("HTML/services_page.html")
+	data, err = ioutil.ReadFile("HTML/services_page.html")
 	if err != nil {
-		fmt.Println("File reading error", err)
+		fmt.Println("File reading error: services", err)
 		return
 	}
 	servicesHTML = string(data)
 	servicesTPL = template.Must(template.New("services").Parse(servicesHTML))
+
+	data, err = ioutil.ReadFile("HTML/about_page.html")
+	if err != nil {
+		fmt.Println("File reading error: about", err)
+		return
+	}
+	aboutHTML = string(data)
+	aboutTPL = template.Must(template.New("about").Parse(aboutHTML))
+
+	data, err = ioutil.ReadFile("HTML/gallery_page.html")
+	if err != nil {
+		fmt.Println("File reading error: gallery", err)
+		return
+	}
+	galleryHTML = string(data)
+	galleryTPL = template.Must(template.New("gallery").Parse(galleryHTML))
+
+	data, err = ioutil.ReadFile("HTML/contact_page.html")
+	if err != nil {
+		fmt.Println("File reading error: contact", err)
+		return
+	}
+	contactHTML = string(data)
+	contactTPL = template.Must(template.New("contact").Parse(contactHTML))
 }
 
 func main() {
@@ -107,6 +134,9 @@ func Start(cfg Config) *HTMLServer {
 	router.HandleFunc("/", indexHandler)
 	router.HandleFunc("/index", indexHandler)
 	router.HandleFunc("/services", servicesHandler)
+	router.HandleFunc("/about", aboutHandler)
+	router.HandleFunc("/gallery", galleryHandler)
+	router.HandleFunc("/contact", contactHandler)
 
 	router.PathPrefix("/HTML/assets/").Handler(http.StripPrefix("/HTML/assets/", http.FileServer(http.Dir("./HTML/assets"))))
 
@@ -210,7 +240,7 @@ func push(w http.ResponseWriter, resource string) {
 	}
 }
 
-// DashboardHandler renders the dashboard template
+// indexHandler renders the dashboard template
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	push(w, "../HTML/assets/css/custom.css")
 	push(w, "../HTML/assets/css/custom-rtl.css")
@@ -225,7 +255,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	render(w, r, indexTpl, "index", fullData)
 }
 
-// DashboardHandler renders the dashboard template
+// servicesHandler renders the dashboard template
 func servicesHandler(w http.ResponseWriter, r *http.Request) {
 	push(w, "../HTML/assets/css/custom.css")
 	push(w, "../HTML/assets/css/custom-rtl.css")
@@ -238,6 +268,51 @@ func servicesHandler(w http.ResponseWriter, r *http.Request) {
 		"NavigationBar": template.HTML(servicesHTML),
 	}
 	render(w, r, servicesTPL, "services", fullData)
+}
+
+// aboutHandler renders the dashboard template
+func aboutHandler(w http.ResponseWriter, r *http.Request) {
+	push(w, "../HTML/assets/css/custom.css")
+	push(w, "../HTML/assets/css/custom-rtl.css")
+	push(w, "../HTML/assets/css/style.css")
+	push(w, "../HTML/assets/css/style-rtl.css")
+	// push(w, "../now-ui/assets/css/now-ui-dashboard.css?v=1.0.1")
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+
+	fullData := map[string]interface{}{
+		"NavigationBar": template.HTML(aboutHTML),
+	}
+	render(w, r, aboutTPL, "about", fullData)
+}
+
+// galleryHandler renders the dashboard template
+func galleryHandler(w http.ResponseWriter, r *http.Request) {
+	push(w, "../HTML/assets/css/custom.css")
+	push(w, "../HTML/assets/css/custom-rtl.css")
+	push(w, "../HTML/assets/css/style.css")
+	push(w, "../HTML/assets/css/style-rtl.css")
+	// push(w, "../now-ui/assets/css/now-ui-dashboard.css?v=1.0.1")
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+
+	fullData := map[string]interface{}{
+		"NavigationBar": template.HTML(galleryHTML),
+	}
+	render(w, r, galleryTPL, "gallery", fullData)
+}
+
+// contactHandler renders the dashboard template
+func contactHandler(w http.ResponseWriter, r *http.Request) {
+	push(w, "../HTML/assets/css/custom.css")
+	push(w, "../HTML/assets/css/custom-rtl.css")
+	push(w, "../HTML/assets/css/style.css")
+	push(w, "../HTML/assets/css/style-rtl.css")
+	// push(w, "../now-ui/assets/css/now-ui-dashboard.css?v=1.0.1")
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+
+	fullData := map[string]interface{}{
+		"NavigationBar": template.HTML(contactHTML),
+	}
+	render(w, r, contactTPL, "contact", fullData)
 }
 
 // Render a template, or server error.
