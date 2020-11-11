@@ -1060,10 +1060,12 @@
 	.sep-text > h2 {font-size: 26px;line-height: 32px;padding-right: 20px;margin-bottom: 18px;}
 	.layout2 .block.sap-sec .lnk_default {height: 40px;line-height: 42px;padding: 0 30px;}
 	.sep-text > p {padding-right: 20px;margin-bottom: 23px;}
-	.bg4 {background-image: url(https://via.placeholder.com/318x508);background-position: 100%;}
+	/* .bg4 {background-image: url(https://via.placeholder.com/318x508);background-position: 100%;} */
+	.bg4 {background-image: url(./../images/themed/bg4.jpg);background-position: 100%;}
 	.layout2 .block.sap-sec.air_sec {padding-top:45px;padding-bottom: 243px;}
 	.layout2 .block.testi-sec {padding-bottom: 330px;}
-	.bg5 {background-image: url(https://via.placeholder.com/320x715);}
+	/* .bg5 {background-image: url(https://via.placeholder.com/320x715);} */
+	.bg5 {background-image: url(./../images/themed/bg5.jpg);}
 	.newsletter-sec {padding: 25px 0 30px;}
 	.our_map.v1 {display: block;}
 	.our_map {display: none;}
