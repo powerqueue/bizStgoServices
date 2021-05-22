@@ -13,15 +13,17 @@ import (
 	"html/template"
 	"io"
 	"io/ioutil"
+	"mime/quotedprintable"
 	"net/http"
+	"net/smtp"
 	"os"
 	"os/signal"
+	"strings"
 	"sync"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
-	"github.com/jinzhu/gorm"
 
 	_ "github.com/jinzhu/gorm/dialects/mssql"
 )
@@ -140,11 +142,7 @@ func Start(cfg Config) *HTMLServer {
 
 	router.PathPrefix("/HTML/assets/").Handler(http.StripPrefix("/HTML/assets/", http.FileServer(http.Dir("./HTML/assets"))))
 
-	router.HandleFunc("/newPost/{title}/{description}", newPost).Methods("POST")
-	router.HandleFunc("/updateProfile/{id}", updatePostHTML).Methods("POST")
-	router.HandleFunc("/getPostContent/{id}", getPostContentByID).Methods("GET")
-	router.HandleFunc("/Posts", allPosts).Methods("GET")
-	// router.PathPrefix("/now-ui/").Handler(http.StripPrefix("/now-ui/", http.FileServer(http.Dir("./now-ui/"))))
+	router.HandleFunc("/sendEmail", contactSubmitHandler).Methods("POST")
 
 	// Create the HTML Server
 	htmlServer := HTMLServer{
@@ -325,38 +323,6 @@ func render(w http.ResponseWriter, r *http.Request, tpl *template.Template, name
 	w.Write(buf.Bytes())
 }
 
-func getPostByID(w http.ResponseWriter, r *http.Request) {
-	db, err := gorm.Open("mssql", "sqlserver://PwrQ_DB_adm:f-azLbi4@localhost:1433?database=PowerQueueDB-2018-10-27-11-29")
-
-	if err != nil {
-		panic("failed to connect database")
-	}
-	defer db.Close()
-	vars := mux.Vars(r)
-
-	id := vars["id"]
-	var post Post
-	db.Where("id = ?", id).Find(&post)
-	fmt.Println("{}", post)
-	json.NewEncoder(w).Encode(post)
-}
-
-func getPostContentByID(w http.ResponseWriter, r *http.Request) {
-	db, err := gorm.Open("mssql", "sqlserver://PwrQ_DB_adm:f-azLbi4@localhost:1433?database=PowerQueueDB-2018-10-27-11-29")
-	if err != nil {
-		panic("failed to connect database")
-	}
-	defer db.Close()
-	vars := mux.Vars(r)
-	id := vars["id"]
-	var post Post
-	db.Where("id = ?", id).Find(&post)
-	fmt.Println("{}", post)
-	fmt.Printf(string(decrypt(post.HTMLContent, "ThisIsMyTest")))
-	// json.NewEncoder(w).Encode(post)
-	fmt.Fprintf(w, string(decrypt(post.HTMLContent, "ThisIsMyTest")))
-}
-
 func createHash(key string) string {
 
 	hasher := md5.New()
@@ -403,67 +369,93 @@ func decrypt(data []byte, passphrase string) []byte {
 	return plaintext
 }
 
-func updatePostHTML(w http.ResponseWriter, r *http.Request) {
-	db, err := gorm.Open("mssql", "sqlserver://PwrQ_DB_adm:f-azLbi4@localhost:1433?database=PowerQueueDB-2018-10-27-11-29")
-	if err != nil {
-		panic("failed to connect database")
-	}
-	defer db.Close()
-	vars := mux.Vars(r)
-	id := vars["id"]
-
-	var post Post
-	db.Where("id = ?", id).Find(&post)
-
-	buf := new(bytes.Buffer)
-	buf.ReadFrom(r.Body)
-	newStr := buf.String()
-
-	post.HTMLContent = encrypt([]byte(newStr), "ThisIsMyTest")
-
-	db.Save(&post)
-
-	fmt.Fprintf(w, "Successfully Updated Post")
-	// fmt.Fprintf(w, string(decrypt([]byte(newStr), "ThisIsMyTest")))
+// smtpServer data to smtp server
+type smtpServer struct {
+	host string
+	port string
 }
 
-func newPost(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("New Post Endpoint Hit")
-	db, err := gorm.Open("mssql", "sqlserver://PwrQ_DB_adm:f-azLbi4@localhost:1433?database=PowerQueueDB-2018-10-27-11-29")
+// Address URI to smtp server
+func (s *smtpServer) Address() string {
+	return s.host + ":" + s.port
+}
 
-	if err != nil {
-		panic("failed to connect database")
-	}
+//ContactMessage struct for jwt auth
+type ContactMessage struct {
+	Name     string `json:"name"`
+	Phone    string `json:"phone"`
+	Email    string `json:"email"`
+	Interest string `json:"interest"`
+	Message  string `json:"message"`
+}
 
-	defer db.Close()
+//contactSubmitHandler - handler for contact form email submission
+func contactSubmitHandler(w http.ResponseWriter, r *http.Request) {
+
+	enableCors(&w)
 
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(r.Body)
 	newStr := buf.String()
-
-	vars := mux.Vars(r)
-	title := vars["title"]
-	description := vars["description"]
-	HTMLContent := encrypt([]byte(newStr), "ThisIsMyTest")
-
-	db.Create(&Post{Title: title, Description: description, HTMLContent: HTMLContent})
-
-	fmt.Println(title)
-	fmt.Println(description)
 	fmt.Println(newStr)
 
-	fmt.Fprintf(w, "New Post Successfully Created")
+	r.ParseForm()
+
+	var msg ContactMessage
+	byt := []byte(strings.TrimSpace(newStr))
+	err2 := json.Unmarshal(byt, &msg)
+	if err2 != nil {
+		http.Error(w, err2.Error(), 500)
+		return
+	}
+
+	// Sender data.
+	from := "operations@powerqueue.io"
+	// password := "dszsbluxtxsvmlpi"
+	password := "vzneckonvorqwdlv"
+
+	smtpServer := smtpServer{host: "smtp.gmail.com", port: "587"}
+	// Message.
+	message := "<h2>Name: </h2>" + msg.Name + "<br/><h2>Phone: </h2>" + msg.Phone + "<br/><h2>Interest: </h2>" + msg.Interest + "<br/><h2>Message: </h2>" + msg.Message
+	// Authentication.
+	auth := smtp.PlainAuth("", from, password, smtpServer.host)
+
+	header := make(map[string]string)
+	toEmail := "nestor.david@powerqueue.io"
+	header["From"] = from
+	header["To"] = toEmail
+	header["Subject"] = "Newsletter Request"
+
+	header["MIME-Version"] = "1.0"
+	header["Content-Type"] = fmt.Sprintf("%s; charset=\"utf-8\"", "text/html")
+	header["Content-Disposition"] = "inline"
+	header["Content-Transfer-Encoding"] = "quoted-printable"
+
+	headerMessage := ""
+	for key, value := range header {
+		headerMessage += fmt.Sprintf("%s: %s\r\n", key, value)
+	}
+
+	// body := "<h1>" + message + "</h1>"
+	body := message
+	var bodyMessage bytes.Buffer
+	temp := quotedprintable.NewWriter(&bodyMessage)
+	temp.Write([]byte(body))
+	temp.Close()
+
+	finalMessage := headerMessage + "\r\n" + bodyMessage.String()
+
+	// Sending email.
+	err := smtp.SendMail(smtpServer.Address(), auth, from, []string{toEmail}, []byte(finalMessage))
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("Email Sent!")
+
+	return
 }
 
-func allPosts(w http.ResponseWriter, r *http.Request) {
-	db, err := gorm.Open("mssql", "sqlserver://PwrQ_DB_adm:f-azLbi4@localhost:1433?database=PowerQueueDB-2018-10-27-11-29")
-	if err != nil {
-		panic("failed to connect database")
-	}
-	defer db.Close()
-	var posts []Post
-	db.Select("id, title, description").Find(&posts)
-
-	fmt.Println("{}", posts)
-	json.NewEncoder(w).Encode(posts)
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 }
