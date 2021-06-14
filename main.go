@@ -24,9 +24,12 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
+	"github.com/gorilla/schema"
 
 	_ "github.com/jinzhu/gorm/dialects/mssql"
 )
+
+var decoder = schema.NewDecoder()
 
 //Post struct
 type Post struct {
@@ -143,6 +146,8 @@ func Start(cfg Config) *HTMLServer {
 	router.PathPrefix("/HTML/assets/").Handler(http.StripPrefix("/HTML/assets/", http.FileServer(http.Dir("./HTML/assets"))))
 
 	router.HandleFunc("/sendEmail", contactSubmitHandler).Methods("POST")
+	router.HandleFunc("/sendAppointmentRequest", appointmentSubmitHandler).Methods("POST")
+	router.HandleFunc("/sendNewsletterRequest", newsletterSubmitHandler).Methods("POST")
 
 	// Create the HTML Server
 	htmlServer := HTMLServer{
@@ -416,12 +421,168 @@ func contactSubmitHandler(w http.ResponseWriter, r *http.Request) {
 
 	smtpServer := smtpServer{host: "smtp.gmail.com", port: "587"}
 	// Message.
-	message := "<h2>Name: </h2>" + msg.Name + "<br/><h2>Phone: </h2>" + msg.Phone + "<br/><h2>Interest: </h2>" + msg.Interest + "<br/><h2>Message: </h2>" + msg.Message
+	message := "<h1>You have a new request for Contact!</h1> </br><h2>Name: </h2>" + msg.Name + "<br/><h2>Phone: </h2>" + msg.Phone + "<br/><h2>Email: </h2>" + msg.Email + "<br/><h2>Message: </h2>" + msg.Message
 	// Authentication.
 	auth := smtp.PlainAuth("", from, password, smtpServer.host)
 
 	header := make(map[string]string)
-	toEmail := "nestor.david@powerqueue.io"
+	toEmail := "Contact@stgoservices.com"
+	header["From"] = from
+	header["To"] = toEmail
+	header["Subject"] = "Contact Request"
+
+	header["MIME-Version"] = "1.0"
+	header["Content-Type"] = fmt.Sprintf("%s; charset=\"utf-8\"", "text/html")
+	header["Content-Disposition"] = "inline"
+	header["Content-Transfer-Encoding"] = "quoted-printable"
+
+	headerMessage := ""
+	for key, value := range header {
+		headerMessage += fmt.Sprintf("%s: %s\r\n", key, value)
+	}
+
+	// body := "<h1>" + message + "</h1>"
+	body := message
+	var bodyMessage bytes.Buffer
+	temp := quotedprintable.NewWriter(&bodyMessage)
+	temp.Write([]byte(body))
+	temp.Close()
+
+	finalMessage := headerMessage + "\r\n" + bodyMessage.String()
+
+	// Sending email.
+	err := smtp.SendMail(smtpServer.Address(), auth, from, []string{toEmail}, []byte(finalMessage))
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("Email Sent!")
+
+	w.WriteHeader(http.StatusOK)
+	return
+}
+
+//AppointmentMessage struct for jwt auth
+type AppointmentMessage struct {
+	Name             string `json:"name"`
+	Phone            string `json:"phone"`
+	Email            string `json:"email"`
+	Address          string `json:"address"`
+	RequestedService string `json:"rq_service"`
+	RequestedDate    string `json:"rq_date"`
+	RequestedTime    string `json:"time_svs"`
+	Message          string `json:"message"`
+}
+
+//appointmentSubmitHandler - handler for contact form email submission
+func appointmentSubmitHandler(w http.ResponseWriter, r *http.Request) {
+
+	enableCors(&w)
+
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(r.Body)
+	newStr := buf.String()
+	fmt.Println(newStr)
+
+	r.ParseForm()
+
+	var msg AppointmentMessage
+	byt := []byte(strings.TrimSpace(newStr))
+	err2 := json.Unmarshal(byt, &msg)
+	if err2 != nil {
+		http.Error(w, err2.Error(), 500)
+		return
+	}
+
+	// Sender data.
+	from := "operations@powerqueue.io"
+	// password := "dszsbluxtxsvmlpi"
+	password := "vzneckonvorqwdlv"
+
+	smtpServer := smtpServer{host: "smtp.gmail.com", port: "587"}
+	// Message.
+	message := "<h1>You have a new appointment request!</h1> </br><h2>Name: </h2>" + msg.Name + "<br/><h2>Phone: </h2>" + msg.Phone + "<br/><h2>Email: </h2>" + msg.Email + "<br/><h2>Address: </h2>" + msg.Address + "<br/><h2>Service Needed: </h2>" + msg.RequestedService + "<br/><h2>Date Needed: </h2>" + msg.RequestedDate + "<br/><h2>Time Needed: </h2>" + msg.RequestedTime + "<br/><h2>Message: </h2>" + msg.Message
+	// Authentication.
+	auth := smtp.PlainAuth("", from, password, smtpServer.host)
+
+	header := make(map[string]string)
+	// toEmail := "nestor.david@powerqueue.io"
+	toEmail := "Contact@stgoservices.com"
+	header["From"] = from
+	header["To"] = toEmail
+	header["Subject"] = "Appointment Request"
+
+	header["MIME-Version"] = "1.0"
+	header["Content-Type"] = fmt.Sprintf("%s; charset=\"utf-8\"", "text/html")
+	header["Content-Disposition"] = "inline"
+	header["Content-Transfer-Encoding"] = "quoted-printable"
+
+	headerMessage := ""
+	for key, value := range header {
+		headerMessage += fmt.Sprintf("%s: %s\r\n", key, value)
+	}
+
+	// body := "<h1>" + message + "</h1>"
+	body := message
+	var bodyMessage bytes.Buffer
+	temp := quotedprintable.NewWriter(&bodyMessage)
+	temp.Write([]byte(body))
+	temp.Close()
+
+	finalMessage := headerMessage + "\r\n" + bodyMessage.String()
+
+	// Sending email.
+	err := smtp.SendMail(smtpServer.Address(), auth, from, []string{toEmail}, []byte(finalMessage))
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("Email Sent!")
+
+	w.WriteHeader(http.StatusOK)
+	return
+}
+
+//NewsletterMessage struct for jwt auth
+type NewsletterMessage struct {
+	Email  string `json:"email"`
+	Submit string `json:"submit"`
+}
+
+//newsletterSubmitHandler - handler for contact form email submission
+func newsletterSubmitHandler(w http.ResponseWriter, r *http.Request) {
+
+	enableCors(&w)
+
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(r.Body)
+	newStr := buf.String()
+	fmt.Println(newStr)
+	fmt.Println(r.URL.Query().Get("email"))
+
+	r.ParseForm()
+
+	var msg NewsletterMessage
+	byt := []byte(strings.TrimSpace(newStr))
+	err2 := json.Unmarshal(byt, &msg)
+	if err2 != nil {
+		http.Error(w, err2.Error(), 500)
+		return
+	}
+
+	// Sender data.
+	from := "operations@powerqueue.io"
+	// password := "dszsbluxtxsvmlpi"
+	password := "vzneckonvorqwdlv"
+
+	smtpServer := smtpServer{host: "smtp.gmail.com", port: "587"}
+	// Message.
+	message := "<h1>You have a new request to add to your Newsletter!</h1> </br><h2>Email: </h2>" + msg.Email
+	// Authentication.
+	auth := smtp.PlainAuth("", from, password, smtpServer.host)
+
+	header := make(map[string]string)
+	toEmail := "Contact@stgoservices.com"
 	header["From"] = from
 	header["To"] = toEmail
 	header["Subject"] = "Newsletter Request"
@@ -453,6 +614,7 @@ func contactSubmitHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println("Email Sent!")
 
+	w.WriteHeader(http.StatusOK)
 	return
 }
 

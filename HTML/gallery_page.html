@@ -706,13 +706,13 @@
 				<div class="clearfix"></div>
 			</div>
 			<!--gallery-sec end-->
-			<ul class="pagination">
+			<!-- <ul class="pagination">
 				<li class="active"><a href="#">1</a></li>
 				<li><a href="#">2</a></li>
 				<li><a href="#">3</a></li>
 				<li><a href="#">4</a></li>
 				<li><a href="#">5</a></li>
-			</ul>
+			</ul> -->
 		</section>
 
 	</div>
@@ -732,10 +732,11 @@
 				</li>
 			</ul>
 			<!--nss_list end-->
-			<form class="newsletter_form">
-				<input type="text" name="search" placeholder="Your e-mail...">
+			<form id="newsletter_form" class="newsletter_form" method="post" role="form" action="sendNewsletterRequest">
+				<input type="text" name="email" placeholder="Your e-mail...">
 				<input type="submit" name="submit" value="OK">
 			</form>
+			<h4><div id="newsletter-result"></div></h4>
 			<!--newsletter_form  end-->
 		</div>
 	</section>
@@ -799,17 +800,154 @@
 	<div class="popup_form appint_form">
 		<div class="appointment_form">
 			<div class="apt_form_head">
-				<h3>Appointment</h3>
+				<h3>Request An Appointment</h3>
 				<a href="#" title="" class="close_apt_form"><img src="../HTML/assets/images/close.png" alt=""></a>
 			</div>
-			<iframe src="https://go.thryv.com/widgets/scheduler/zzx0gate8426swv1?frontage_iframe=true" width="100%" height="508"  frameborder="0" style=" ">
-				<p>Use my online scheduling page by Thryv to schedule an appointment with me:</p>
-				<a href='https://go.thryv.com/v/zzx0gate8426swv1/online_scheduling?frontage_iframe=true&invite=vr_sched_pb-zzx0gate8426swv1'>Online Scheduling with STGO SERVICES LLC</a>
-			  </iframe>
+			<!--apt_form_head end-->
+			<form id="appointmentform" class="rqs_form" method="post" role="form" action="sendAppointmentRequest">
+				<div class="input_field">
+					<input type="text" name="name" placeholder="Your name">
+				</div>
+				<!--input_field end-->
+				<div class="input_field">
+					<input type="email" name="email" placeholder="Your e-mail">
+				</div>
+				<!--input_field end-->
+				<div class="input_field">
+					<input type="text" name="phone" placeholder="Phone">
+				</div>
+				<!--input_field end-->
+				<div class="input_field">
+					<input type="text" name="address" placeholder="Address">
+				</div>
+				<!--input_field end-->
+				<div class="input_field">
+					<input type="text" name="rq_service" placeholder="Describe Service Needed">
+				</div>
+				<!-- <div class="input_field slct">
+					<select>
+						<option>Type of service needed:</option>
+						<option value="serive1">Service 1 </option>
+						<option value="serive2">Service 2</option>
+						<option value="serive3">Service 3</option>
+						<option value="serive4">Service 4</option>
+					</select>
+				</div> -->
+				<!--input_field end-->
+				<div class="input_field datetimepicker-wrap">
+					<input type="text" name="rq_date" placeholder="Requested date of service?" class="datetimepicker">
+					<svg version="1.1" id="Capa_127" xmlns="http://www.w3.org/2000/svg"
+						xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512"
+						xml:space="preserve">
+						<g>
+							<g>
+								<path d="M452,40h-24V0h-40v40H124V0H84v40H60C26.916,40,0,66.916,0,100v352c0,33.084,26.916,60,60,60h392
+								c33.084,0,60-26.916,60-60V100C512,66.916,485.084,40,452,40z M472,452c0,11.028-8.972,20-20,20H60c-11.028,0-20-8.972-20-20V188
+								h432V452z M472,148H40v-48c0-11.028,8.972-20,20-20h24v40h40V80h264v40h40V80h24c11.028,0,20,8.972,20,20V148z">
+								</path>
+							</g>
+						</g>
+						<g>
+							<g>
+								<rect x="76" y="230" width="40" height="40"></rect>
+							</g>
+						</g>
+						<g>
+							<g>
+								<rect x="156" y="230" width="40" height="40"></rect>
+							</g>
+						</g>
+						<g>
+							<g>
+								<rect x="236" y="230" width="40" height="40"></rect>
+							</g>
+						</g>
+						<g>
+							<g>
+								<rect x="316" y="230" width="40" height="40"></rect>
+							</g>
+						</g>
+						<g>
+							<g>
+								<rect x="396" y="230" width="40" height="40"></rect>
+							</g>
+						</g>
+						<g>
+							<g>
+								<rect x="76" y="310" width="40" height="40"></rect>
+							</g>
+						</g>
+						<g>
+							<g>
+								<rect x="156" y="310" width="40" height="40"></rect>
+							</g>
+						</g>
+						<g>
+							<g>
+								<rect x="236" y="310" width="40" height="40"></rect>
+							</g>
+						</g>
+						<g>
+							<g>
+								<rect x="316" y="310" width="40" height="40"></rect>
+							</g>
+						</g>
+						<g>
+							<g>
+								<rect x="76" y="390" width="40" height="40"></rect>
+							</g>
+						</g>
+						<g>
+							<g>
+								<rect x="156" y="390" width="40" height="40"></rect>
+							</g>
+						</g>
+						<g>
+							<g>
+								<rect x="236" y="390" width="40" height="40"></rect>
+							</g>
+						</g>
+						<g>
+							<g>
+								<rect x="316" y="390" width="40" height="40"></rect>
+							</g>
+						</g>
+						<g>
+							<g>
+								<rect x="396" y="310" width="40" height="40"></rect>
+							</g>
+						</g>
+					</svg>
+				</div>
+				<!--input_field end-->
+				<div class="input_field datetimepicker-wrap">
+					<input type="text" name="time_svs" placeholder="Requested time of service?" class="datetimepicker2">
+					<svg version="1.1" id="Capa_128" xmlns="http://www.w3.org/2000/svg"
+						xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="97.16px" height="97.16px"
+						viewBox="0 0 97.16 97.16" xml:space="preserve">
+						<g>
+							<g>
+								<path
+									d="M48.58,0C21.793,0,0,21.793,0,48.58s21.793,48.58,48.58,48.58s48.58-21.793,48.58-48.58S75.367,0,48.58,0z M48.58,86.823
+								c-21.087,0-38.244-17.155-38.244-38.243S27.493,10.337,48.58,10.337S86.824,27.492,86.824,48.58S69.667,86.823,48.58,86.823z">
+								</path>
+								<path d="M73.898,47.08H52.066V20.83c0-2.209-1.791-4-4-4c-2.209,0-4,1.791-4,4v30.25c0,2.209,1.791,4,4,4h25.832
+								c2.209,0,4-1.791,4-4S76.107,47.08,73.898,47.08z"></path>
+							</g>
+						</g>
+					</svg>
+				</div>
+				<!--input_field end-->
+				<div class="submit_btn">
+					<input type="submit" name="submit" value="Submit Request">
+				</div>
+				<!--submit_btn end-->
+			</br>
+				<h4><div id="appointment-result"></div></h4>
+			</form>
 		</div>
 	</div>
 	<!--popup_form end-->
-
 	<div class="popup_form contact_popup">
 		<div class="appointment_form">
 			<div class="apt_form_head">
@@ -817,28 +955,34 @@
 				<a href="#" title="" class="close_apt_form"><img src="../HTML/assets/images/close.png" alt=""></a>
 			</div>
 			<!--apt_form_head end-->
-			<iframe src="https://go.thryv.com/widgets/contact_form/zzx0gate8426swv1?frontage_iframe=true" width="100%" height="542"  scrolling="no"  frameborder="0" style=" ">
-				<p>Please contact me via my contact form at Thryv:</p>
-				<a href='https://go.thryv.com/v/zzx0gate8426swv1/contact?frontage_iframe=true&invite=vr_cf_pb-zzx0gate8426swv1'>Contact Form for STGO SERVICES LLC</a>
-			  </iframe>
-			<!-- <form class="rqs_form">
+
+			<form id="ajax-contact" class="rqs_form" method="post" role="form" action="sendEmail">
 				<div class="input_field">
 					<input type="text" name="name" placeholder="Your name">
 				</div>
+				<!--input_field end-->
 				<div class="input_field">
 					<input type="text" name="phone" placeholder="Your Phone">
 				</div>
+				<!--input_field end-->
 				<div class="input_field">
 					<input type="email" name="email" placeholder="Your e-mail">
 				</div>
+				<!--input_field end-->
 				<div class="input_field">
 					<textarea name="message" placeholder="Message"></textarea>
 				</div>
+				<!--input_field end-->
 				<div class="submit_btn">
 					<input type="submit" name="submit" value="Send Message">
 				</div>
-			</form> -->
+			</br>
+				<h4><div id="form-messages"></div></h4>
+				<!--submit_btn end-->
+			</form>
+
 		</div>
+		
 	</div>
 	<!--popup_form end-->
 	<div class="popup_form direction_form">
@@ -860,6 +1004,7 @@
 	</div>
 
 	<script src="../HTML/assets/js/jquery.js"></script>
+	<script src="../HTML/assets/js/app.js"></script>
 	<script src="../HTML/assets/js/plugins/bootstrap.min.js"></script>
 	<script src="../HTML/assets/js/plugins/moment.min.js"></script>
 	<script src="../HTML/assets/js/plugins/bootstrap-datetimepicker.min.js"></script>

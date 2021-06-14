@@ -103,7 +103,8 @@ h3 {
   margin: 0 0 4px;
   font-family: 'Roboto', sans-serif;
   font-weight: 500;
-  color: #f47629;
+  /* color: #f47629; */
+  color: #df6160;
 }
 h3 span.light {
   font-weight: 300;
@@ -115,7 +116,8 @@ h4 {
   margin: 0 0 20px;
   font-family: 'Roboto', sans-serif;
   font-weight: 500;
-  color: #f47629;
+  /* color: #f47629; */
+  color: #df6160;
 }
 h5 {
   padding: 0;
@@ -2115,7 +2117,8 @@ body.layout2 {
   background-color: #f7f7f7;
   border-right: 1px solid #dfdfdf;
   text-transform: capitalize;
-  width: 33.333%;
+  width: 25%;
+  /* width: 33.333%; */
   padding: 17px 0 19px;
   font-weight: 700;
   cursor: pointer;
